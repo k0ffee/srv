@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: srv-8080-echo-v3
+  labels:
+    app: srv-8080-echo
+spec:
+  # canary deployment: replicas: 1
+  replicas: 3
+  selector:
+    matchLabels:
+      app: srv-8080-echo
+      version: v3
+  template:
+    metadata:
+      labels:
+        app: srv-8080-echo
+        version: v3
+    spec:
+      containers:
+        - name: srv-8080-echo
+          image: docker.io/tinocode/srv:v3
+          ports:
+            - containerPort: 8080
+          env:
+            - name: my_pod_ipaddress
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: app_version
+              value: v3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 20

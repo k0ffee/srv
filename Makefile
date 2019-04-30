@@ -7,7 +7,7 @@ all: build
 .PHONY: build
 build: ${targets}
 
-${targets}:
+${targets}: ${targets}.go
 	${go} build -o $@ ${@}.go
 
 .PHONY: test

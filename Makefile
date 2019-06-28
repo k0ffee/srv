@@ -12,7 +12,7 @@ ${targets}: ${targets}.go
 
 .PHONY: test
 test:
-	for file in *.go; do ${go} vet $$file; done
+	go vet
 
 .PHONY: clean
 clean:
